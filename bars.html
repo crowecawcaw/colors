@@ -1,0 +1,58 @@
+<html>
+  <head></head>
+  <body
+    style="
+      background: #222;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    "
+  >
+    <canvas
+      id="canvas"
+      width="500"
+      height="500"
+      style="
+        flex: 0 0 auto;
+        box-shadow: 0 0 75px rgba(0, 0, 0, 1);
+        border-radius: 25px;
+      "
+    ></canvas>
+    <script>
+      const random = (start, end) =>
+        start + Math.floor(Math.random() * (end - start))
+      const START = [random(0, 360), random(25, 100), random(25, 75)]
+      const END = [
+        random(START[0] + 150, START[0] + 300),
+        random(START[1], 100),
+        random(START[2], 75),
+      ]
+      const WIDTH = 500
+      const HEIGHT = 500
+      const SWITCHES = 5
+
+      let bars = new Array(WIDTH)
+      for (let i = 0; i < WIDTH; i++)
+        bars[i] = START.map(
+          (_, j) => START[j] + (END[j] - START[j]) * (i / WIDTH)
+        )
+
+      for (let i = 0; i < SWITCHES; i++) {
+        const x = random(0, WIDTH)
+        const y = random(x, WIDTH)
+        bars = [
+          ...bars.slice(0, x),
+          ...bars.slice(x, y).reverse(),
+          ...bars.slice(y, WIDTH),
+        ]
+      }
+      console.log(bars)
+      const ctx = document.getElementById('canvas').getContext('2d')
+      ctx.filter = 'blur(100px)'
+      bars.forEach((b, i) => {
+        ctx.fillStyle = `hsl(${b[0]}, ${b[1]}%, ${b[2]}%)`
+        ctx.fillRect(i, 0, 1, HEIGHT)
+      })
+    </script>
+  </body>
+</html>
